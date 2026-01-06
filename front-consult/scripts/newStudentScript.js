@@ -23,6 +23,7 @@ function postData(url = '', data = {}) {
     .then(response => response.json());
 }
 
+// Function to handle form submission
 function submitForm() {
     // Gather form data
     const firstName = document.getElementById('firstName').value;
