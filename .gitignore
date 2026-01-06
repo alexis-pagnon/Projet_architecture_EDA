@@ -1,1 +1,6 @@
 /ws_services_template/target/
+
+# Node.js
+/front-consult/node_modules/
+*.log
+npm-debug.log*

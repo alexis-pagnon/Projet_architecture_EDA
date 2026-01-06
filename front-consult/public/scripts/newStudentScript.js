@@ -1,3 +1,30 @@
+// Create WebSocket connection
+const ws = new WebSocket("ws://localhost:8080");
+
+ws.onopen = () => {
+    console.log('WebSocket connection established');
+};
+
+ws.onmessage = event => {
+    const data = JSON.parse(event.data);
+    console.log('Response from server:', data);
+    
+    if (data.success) {
+        alert('Student added successfully!');
+    } else {
+        alert('Error adding student: ' + (data.error || 'Unknown error'));
+    }
+};
+
+ws.onerror = error => {
+    console.error('WebSocket error:', error);
+    alert('Connection error with server');
+};
+
+ws.onclose = () => {
+    console.log('WebSocket connection closed');
+};
+
 document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('year').addEventListener('change', function() {
         const year = parseInt(this.value);
@@ -10,18 +37,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
-
-// Function to post data to the server
-function postData(url = '', data = {}) {
-    return fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    })
-    .then(response => response.json());
-}
 
 // Function to handle form submission
 function submitForm() {
@@ -52,22 +67,22 @@ function submitForm() {
     const formation = yearText + "-" + temp;
     console.log(`First Name: ${firstName}, Last Name:  ${lastName}, Email: ${email}, Formation: ${formation}`);
 
+    // Send data via WebSocket
+    ws.send(JSON.stringify({
+        action: 'addStudent',
+        header: 'CAFEBABE',
+        data: {
+            firstName,
+            lastName,
+            email,
+            formation
+        }
+    }));
+
     // Clear form after submission
     document.getElementById('firstName').value = '';
     document.getElementById('lastName').value = '';
     document.getElementById('email').value = '';
     document.getElementById('year').value = '1';
     document.getElementById('formationContainer').style.display = 'none';
-
-    // Sending data
-    postData('/service/student/add', {firstName, lastName, email, formation})
-    .then(data => {
-        console.log('Success:', data);
-        alert('Student added successfully!');
-    })
-    .catch((error) => {
-        console.error('Error:', error);
-        alert('Error adding student.');
-    });
-
 }

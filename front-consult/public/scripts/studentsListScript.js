@@ -1,34 +1,65 @@
-// Function to receive data avec HEADER = CAFEBABE 
-function getData(url = '') {
-    return fetch(url, {
-        method: 'GET',
-        headers: {
-            'HEADER': 'CAFEBABE'
-        }
-    })
-    .then(response => response.json());
-}
+// Create WebSocket connection
+const ws = new WebSocket("ws://localhost:8080");
 
-// On page load, fetch and display the list of students
+// On page load, setup WebSocket listeners
 document.addEventListener('DOMContentLoaded', () => {
-    getData('/service/students')
-    .then(data => {
-        const studentsListContainer = document.getElementById('studentsListContainer');
-        // Creation of cards with students info
-        data.forEach(student => {
-            const studentCard = document.createElement('div');
-            studentCard.className = 'student-card';
-            studentCard.innerHTML = `
-                <h2>${student.firstName} ${student.lastName}</h2>
-                <p>Email: ${student.email}</p>
-                <p>Year: ${student.year}</p>
-                <p>Formation: ${student.formation}</p>
-            `;
-            container.appendChild(studentCard);
+    const studentsListContainer = document.getElementById('studentsListContainer');
+    
+    // Display loading message
+    studentsListContainer.innerHTML = '<p class="loading">Loading students...</p>';
+    
+    // WebSocket connection opened
+    ws.onopen = () => {
+        console.log('WebSocket connection established');
+        // Request students list
+        ws.send(JSON.stringify({ 
+            action: 'getStudents',
+            header: 'CAFEBABE'
+        }));
+    };
+    
+    // Handle incoming messages
+    ws.onmessage = event => {
+        const data = JSON.parse(event.data);
+        
+        // Clear loading message on first data
+        if (studentsListContainer.querySelector('.loading')) {
+            studentsListContainer.innerHTML = '';
         }
-        );
-    })
-    .catch(error => {
-        console.error('Error fetching students data:', error);
-    });
+        
+        // If data is an array of students
+        if (Array.isArray(data)) {
+            data.forEach(student => {
+                createStudentCard(student, studentsListContainer);
+            });
+        } 
+        // If data is a single student
+        else if (data.firstName) {
+            createStudentCard(data, studentsListContainer);
+        }
+    };
+    
+    // Handle errors
+    ws.onerror = error => {
+        console.error('WebSocket error:', error);
+        studentsListContainer.innerHTML = '<p class="error">Error connecting to server</p>';
+    };
+    
+    // Handle connection close
+    ws.onclose = () => {
+        console.log('WebSocket connection closed');
+    };
 });
+
+// Function to create a student card
+function createStudentCard(student, container) {
+    const studentCard = document.createElement('div');
+    studentCard.className = 'student-card';
+    studentCard.innerHTML = `
+        <h2>${student.firstName} ${student.lastName}</h2>
+        <p class="student-email">Email: ${student.email}</p>
+        <p class="student-year">Year: ${student.year}</p>
+        <p class="student-formation">Formation: ${student.formation}</p>
+    `;
+    container.appendChild(studentCard);
+}
