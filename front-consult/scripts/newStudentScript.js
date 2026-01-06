@@ -60,7 +60,7 @@ function submitForm() {
     document.getElementById('formationContainer').style.display = 'none';
 
     // Sending data
-    postData('http://localhost:3000/service/student/add', {firstName, lastName, email, formation})
+    postData('/service/student/add', {firstName, lastName, email, formation})
     .then(data => {
         console.log('Success:', data);
         alert('Student added successfully!');
