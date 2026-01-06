@@ -61,17 +61,17 @@ services:
 #================================
 #Lancer le service d'intégration
 #================================
-  integration-service:
+  integration-services:
     depends_on:
       kafka:
         condition: service_started
       pg-insa:
         condition: service_started
-    container_name: integration-service
+    container_name: integration-services
     image: integration_services:latest
     networks:
       - insa-bridge
-    hostname: integration-service
+    hostname: integration-services
     restart: always
     environment:
       # Surcharge des propriétés pour Docker

@@ -1,1 +1,1 @@
-docker build -t integration_services . 
+docker build -t integration_services:latest .

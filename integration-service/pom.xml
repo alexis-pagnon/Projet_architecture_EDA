@@ -12,7 +12,8 @@
     </parent>
 
     <groupId>com.insa.fr</groupId>
-    <artifactId>integration-service</artifactId>
+    <artifactId>integration_services</artifactId>
+    <version>0.0.1</version>
     <name>Integration Service</name>
     <description>Service EDA pour gestion des etudiants via Kafka et PostgreSQL</description>
 
