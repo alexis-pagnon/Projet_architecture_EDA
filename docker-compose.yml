@@ -57,22 +57,46 @@ services:
     volumes:
       - ./pgdata:/var/lib/postgresql/data
 
+
+#================================
+#Lancer le service d'intégration
+#================================
+  integration-service:
+    depends_on:
+      kafka:
+        condition: service_started
+      pg-insa:
+        condition: service_started
+    container_name: integration-service
+    image: integration_services:latest
+    networks:
+      - insa-bridge
+    hostname: integration-service
+    restart: always
+    environment:
+      # Surcharge des propriétés pour Docker
+      SPRING_DATASOURCE_URL: jdbc:postgresql://pg-insa:5432/insa
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: admin
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:19092
+
+
 #================================
 #Lancer le service ws template
 #================================
 # TODO : Modifier pour supprimer la dépendance à pg-insa 
 # -> la BDD et l'API doivent être séparées
-  ws-template:
-    depends_on:
-      - pg-insa
-    container_name: ws-template
-    image: ws_services_template:latest
-    networks:
-      - insa-bridge
-    hostname: ws-template
-    restart: always
-    ports:
-      - "8800:8800"
+  # ws-template:
+  #   depends_on:
+  #     - pg-insa
+  #   container_name: ws-template
+  #   image: ws_services_template:latest
+  #   networks:
+  #     - insa-bridge
+  #   hostname: ws-template
+  #   restart: always
+  #   ports:
+  #     - "8800:8800"
 
 #renommer le réseau par defaut des services
 networks:
