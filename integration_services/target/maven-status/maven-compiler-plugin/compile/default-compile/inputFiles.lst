@@ -1,0 +1,7 @@
+/home/alexis/Documents/ICY_5A_ArchiServices/Projet_architecture_EDA/integration_services/src/main/java/com/insa/fr/IntegrationServiceApplication.java
+/home/alexis/Documents/ICY_5A_ArchiServices/Projet_architecture_EDA/integration_services/src/main/java/com/insa/fr/entity/Students.java
+/home/alexis/Documents/ICY_5A_ArchiServices/Projet_architecture_EDA/integration_services/src/main/java/com/insa/fr/kafka/Consumer.java
+/home/alexis/Documents/ICY_5A_ArchiServices/Projet_architecture_EDA/integration_services/src/main/java/com/insa/fr/kafka/Producer.java
+/home/alexis/Documents/ICY_5A_ArchiServices/Projet_architecture_EDA/integration_services/src/main/java/com/insa/fr/mappers/StudentMapper.java
+/home/alexis/Documents/ICY_5A_ArchiServices/Projet_architecture_EDA/integration_services/src/main/java/com/insa/fr/services/Services_Interface.java
+/home/alexis/Documents/ICY_5A_ArchiServices/Projet_architecture_EDA/integration_services/src/main/java/com/insa/fr/services/Services_implements.java

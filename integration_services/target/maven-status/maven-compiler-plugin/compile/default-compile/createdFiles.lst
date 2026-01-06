@@ -1,0 +1,7 @@
+com/insa/fr/entity/Students.class
+com/insa/fr/mappers/StudentMapper.class
+com/insa/fr/kafka/Consumer.class
+com/insa/fr/services/Services_Interface.class
+com/insa/fr/services/Services_implements.class
+com/insa/fr/IntegrationServiceApplication.class
+com/insa/fr/kafka/Producer.class

@@ -64,7 +64,7 @@ services:
   integration-services:
     container_name: integration-services
     build:
-      context: ./DockerHub/integration_services
+      context: ./integration_services/DockerHub
       dockerfile: Dockerfile
     image: integration_services:latest
     networks:
