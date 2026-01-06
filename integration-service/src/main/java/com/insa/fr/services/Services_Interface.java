@@ -9,7 +9,6 @@ import java.util.List;
  */
 public interface Services_Interface {
     
-   public List<Students> getStudent(String id);
    public List<Students> getStudents(); 
    public int createStudent(Students stud);
 
