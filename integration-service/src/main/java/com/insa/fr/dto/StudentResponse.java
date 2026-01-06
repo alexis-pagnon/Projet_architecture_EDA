@@ -3,5 +3,5 @@
 package com.insa.fr.dto;
 
 public class StudentResponse {
-    
+    // TODO
 }
