@@ -1,9 +1,46 @@
 services:
 #================================
+#Lancer le bus Kafka
+#================================
+  kafka:
+    container_name: kafka
+    image: apache/kafka:latest
+    networks:
+      - insa-bridge
+    hostname: kafka
+    restart: always
+    ports:
+      - "9092:9092"
+    environment:
+      # Listeners
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT'
+      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT_HOST://localhost:9092,PLAINTEXT://kafka:19092'
+      KAFKA_LISTENERS: 'CONTROLLER://:29093,PLAINTEXT_HOST://:9092,PLAINTEXT://:19092'
+      # Settings for KRaft mode
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: 'broker,controller'
+      KAFKA_INTER_BROKER_LISTENER_NAME: 'PLAINTEXT'
+      KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
+      KAFKA_CONTROLLER_QUORUM_VOTERS: '1@kafka:29093'
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_SHARE_COORDINATOR_STATE_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_SHARE_COORDINATOR_STATE_TOPIC_MIN_ISR: 1
+      CLUSTER_ID: '4L6g3nShT-eMCtK--X86sw'
+      KAFKA_LOG_DIRS: '/tmp/kraft-combined-logs'
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+    volumes:
+      - ./kafka/data:/var/lib/kafka/data
+      
+#================================
 #Lancer postgresQl
 #================================
   pg-insa:
     container_name: pg-insa
+    build:
+      context: ./pg-insa
     image: pg-insa:latest
     command: postgres -c 'max_connections=200'
     networks:
@@ -22,20 +59,68 @@ services:
     volumes:
       - ./pgdata:/var/lib/postgresql/data
 
+
+#================================
+#Lancer le service d'intégration
+#================================
+  integration-services:
+    container_name: integration-services
+    build:
+      context: ./integration_services/DockerHub
+    image: integration_services:latest
+    networks:
+      - insa-bridge
+    depends_on:
+      - kafka
+      - pg-insa
+    hostname: integration-services
+    restart: always
+    environment:
+      # Surcharge des propriétés pour Docker
+      SPRING_DATASOURCE_URL: jdbc:postgresql://pg-insa:5432/insa
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: admin
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:19092
+
+
 #================================
 #Lancer le service ws template
 #================================
   ws-template:
-    depends_on:
-      - pg-insa
     container_name: ws-template
+    build:
+      context: ./ws_services_template/DockerHub
     image: ws_services_template:latest
     networks:
       - insa-bridge
+    depends_on:
+      - kafka
+      - pg-insa
     hostname: ws-template
     restart: always
     ports:
       - "8800:8800"
+    environment:
+      # Surcharge des propriétés pour Docker
+      SPRING_DATASOURCE_URL: jdbc:postgresql://pg-insa:5432/insa
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: admin
+
+#================================
+# Lancer le front consult
+#================================
+  front-consult:
+    container_name: front-consult
+    image: front-consult:latest
+    build: ./front-consult
+    ports:
+      - "8080:8080"
+    environment:
+      - NODE_ENV=production
+    restart: always
+    networks:
+      - insa-bridge
+
 
 #renommer le réseau par defaut des services
 networks:

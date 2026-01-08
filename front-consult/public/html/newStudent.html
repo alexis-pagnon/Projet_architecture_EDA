@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="fr">
+    
+<head>
+  <meta charset="utf-8">
+  <title>New Student</title>
+  <link rel="stylesheet" href="../css/newStudentStyle.css">
+  <script src="../scripts/newStudentScript.js"></script>
+</head>
+
+<body>
+    <h1>New Student Page</h1>
+    <textfield-label for="firstName">First Name:</textfield-label>
+    <input type="text" id="firstName" name="firstName"><br>
+
+    <textfield-label for="lastName">Last Name:</textfield-label>
+    <input type="text" id="lastName" name="lastName"><br>
+
+    <textfield-label for="email">Email:</textfield-label>
+    <input type="email" id="email" name="email"><br>
+
+    <textfield-label for="year">Year:</textfield-label>
+    <select id="year" name="year">
+        <option value="1" selected>1A</option>
+        <option value="2">2A</option>
+        <option value="3">3A</option>
+        <option value="4">4A</option>
+        <option value="5">5A</option>
+    </select><br>
+
+    <div id="formationContainer" style="display: none;">
+        <textfield-label for="formation">Formation:</textfield-label>
+        <select id="formation" name="formation">
+            <option value="ICY-FISE" selected>ICY-FISE</option>
+            <option value="ICY-FISA">ICY-FISA</option>
+            <option value="AVM-FISE">AVM-FISE</option>
+            <option value="GCB-FISE">GCB-FISE</option>
+            <option value="SET-FISE">SET-FISE</option>
+            <option value="GI-FISE">GI-FISE</option>
+            <option value="GI-FISA">GI-FISA</option>
+            <option value="ME-FISE">ME-FISE</option>
+            <option value="ME-FISA">ME-FISA</option>
+            <option value="MT-FISE">MT-FISE</option>
+        </select><br>
+    </div>
+
+    <button type="submit" onclick="submitForm()">Submit</button>
+    
+</body>
+</html>
