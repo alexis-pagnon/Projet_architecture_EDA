@@ -42,7 +42,6 @@ services:
     build:
       context: ./pg-insa
     image: pg-insa:latest
-    command: postgres -c 'max_connections=200'
     networks:
       - insa-bridge
     hostname: pg-insa
@@ -101,7 +100,9 @@ services:
     ports:
       - "8800:8800"
     environment:
-      # Surcharge des propriétés pour Docker
+      # Configuration Kafka
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:19092
+      # Connection BDD pour validation API key uniquement
       SPRING_DATASOURCE_URL: jdbc:postgresql://pg-insa:5432/insa
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: admin

@@ -115,22 +115,22 @@ public class Controller {
         } else {throw new NotAllowedOperationException("NotAllowedOperationException : Contactez l'administrateur pour obtenir un acces...");}
    }
 
-    /****************************************
-     * Rechercher un étudiant par son Id
-     * @param studentId
-     * @param xapikey
-     * @return 
-     ****************************************/
-    @GetMapping(value="/service/student/{id}",produces={"application/json"})
-    @ApiOperation(value =" Récuperer un étudiant par son id")
-    public ResponseEntity<Object> getStudent(@PathVariable(value = "id") String studentId,@RequestHeader("x-api-key") String xapikey) {
-       //if (securapi.verif_apikey(xapikey)==true)
-       if (securapi.verif_apikeydb(jdbctemplate,xapikey)==true)
-        {        
-            //get data
-            return new ResponseEntity<>(execservice.getStudent(studentId), HttpStatus.OK);
-        } else {throw new NotAllowedOperationException("NotAllowedOperationException : Contactez l'administrateur pour obtenir un acces...");}
-   }
+  //   /****************************************
+  //    * Rechercher un étudiant par son Id
+  //    * @param studentId
+  //    * @param xapikey
+  //    * @return 
+  //    ****************************************/
+  //   @GetMapping(value="/service/student/{id}",produces={"application/json"})
+  //   @ApiOperation(value =" Récuperer un étudiant par son id")
+  //   public ResponseEntity<Object> getStudent(@PathVariable(value = "id") String studentId,@RequestHeader("x-api-key") String xapikey) {
+  //      //if (securapi.verif_apikey(xapikey)==true)
+  //      if (securapi.verif_apikeydb(jdbctemplate,xapikey)==true)
+  //       {        
+  //           //get data
+  //           return new ResponseEntity<>(execservice.getStudent(studentId), HttpStatus.OK);
+  //       } else {throw new NotAllowedOperationException("NotAllowedOperationException : Contactez l'administrateur pour obtenir un acces...");}
+  //  }
 
     
      /****************************************
@@ -153,44 +153,44 @@ public class Controller {
    }
     
    
-     /****************************************
-     * Modifier les données d'un étudiant
-     * @param id
-     * @param stud
-     * @param xapikey
-     * @return 
-     ****************************************/
-    @PatchMapping(value="/service/student/update/{id}", consumes={"application/json"}, produces ={"application/json"})
-    @ApiOperation(value = "update un étudiant dans la base postgresql")
-    public ResponseEntity<String> updateStudent(@PathVariable (value = "id") String id,@RequestBody Students stud,@RequestHeader("x-api-key") String xapikey) {
-       //if (securapi.verif_apikey(xapikey)==true)
-       if (securapi.verif_apikeydb(jdbctemplate,xapikey)==true)
-        {        
-            //update data
-            execservice.updateStudent(stud,id);
+  //    /****************************************
+  //    * Modifier les données d'un étudiant
+  //    * @param id
+  //    * @param stud
+  //    * @param xapikey
+  //    * @return 
+  //    ****************************************/
+  //   @PatchMapping(value="/service/student/update/{id}", consumes={"application/json"}, produces ={"application/json"})
+  //   @ApiOperation(value = "update un étudiant dans la base postgresql")
+  //   public ResponseEntity<String> updateStudent(@PathVariable (value = "id") String id,@RequestBody Students stud,@RequestHeader("x-api-key") String xapikey) {
+  //      //if (securapi.verif_apikey(xapikey)==true)
+  //      if (securapi.verif_apikeydb(jdbctemplate,xapikey)==true)
+  //       {        
+  //           //update data
+  //           execservice.updateStudent(stud,id);
     
-          return new ResponseEntity<>("{\"reponse\":\"student updated\"}", HttpStatus.CREATED);
-        } else {throw new NotAllowedOperationException("NotAllowedOperationException : Contactez l'administrateur pour obtenir un acces...");}
-   }
+  //         return new ResponseEntity<>("{\"reponse\":\"student updated\"}", HttpStatus.CREATED);
+  //       } else {throw new NotAllowedOperationException("NotAllowedOperationException : Contactez l'administrateur pour obtenir un acces...");}
+  //  }
     
-     /****************************************
-     * Supprimer un étudiant par son Id
-     * @param id
-     * @param xapikey
-     * @return 
-     ****************************************/
-    @DeleteMapping(value="/service/student/delete/{id}")
-    @ApiOperation(value = "Supprimer un étudiant dans la base postgresql")
-    public ResponseEntity<String> deleteStudent(@PathVariable (value = "id") String id,@RequestHeader("x-api-key") String xapikey) {
-       //if (securapi.verif_apikey(xapikey)==true)
-       if (securapi.verif_apikeydb(jdbctemplate,xapikey)==true)
-        {        
-            //delete data
-            execservice.deleteStudent(id);
+  //    /****************************************
+  //    * Supprimer un étudiant par son Id
+  //    * @param id
+  //    * @param xapikey
+  //    * @return 
+  //    ****************************************/
+  //   @DeleteMapping(value="/service/student/delete/{id}")
+  //   @ApiOperation(value = "Supprimer un étudiant dans la base postgresql")
+  //   public ResponseEntity<String> deleteStudent(@PathVariable (value = "id") String id,@RequestHeader("x-api-key") String xapikey) {
+  //      //if (securapi.verif_apikey(xapikey)==true)
+  //      if (securapi.verif_apikeydb(jdbctemplate,xapikey)==true)
+  //       {        
+  //           //delete data
+  //           execservice.deleteStudent(id);
     
-          return new ResponseEntity<>("{\"reponse\":\"deleted\"}", HttpStatus.ACCEPTED);
-        } else {throw new NotAllowedOperationException("NotAllowedOperationException : Contactez l'administrateur pour obtenir un acces...");}
-   }
+  //         return new ResponseEntity<>("{\"reponse\":\"deleted\"}", HttpStatus.ACCEPTED);
+  //       } else {throw new NotAllowedOperationException("NotAllowedOperationException : Contactez l'administrateur pour obtenir un acces...");}
+  //  }
     
     
 }
