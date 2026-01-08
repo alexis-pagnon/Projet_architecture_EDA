@@ -1,2 +1,7 @@
 /ws_services_template/target/
-/integration_tests/target/
+/integration_services/target/
+
+# Node.js
+/front-consult/node_modules/
+*.log
+npm-debug.log*
