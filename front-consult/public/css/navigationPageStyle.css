@@ -1,0 +1,31 @@
+body {
+    background-color: #f5eded;
+    font-family: 'Montserrat', Arial, sans-serif;
+    padding: 20px;
+    margin: 0;
+}
+
+h1 {
+    text-align: center;
+    color: #333333;
+    font-family: 'Arial', sans-serif;
+    margin-top: 30px;
+    margin-bottom: 40px;
+}
+
+button {
+    display: block;
+    width: 200px;
+    margin: 20px auto;
+    padding: 10px;
+    font-size: 16px;
+    background-color: #578cdc;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #436bb8;
+}

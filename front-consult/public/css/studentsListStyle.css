@@ -1,0 +1,96 @@
+body {
+    background-color: #f5eded;
+    font-family: 'Montserrat', Arial, sans-serif;
+    padding: 20px;
+    margin: 0;
+}
+
+h1 {
+    text-align: center;
+    color: #333333;
+    font-family: 'Arial', sans-serif;
+    margin-top: 30px;
+    margin-bottom: 40px;
+}
+
+#studentsListContainer {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.student-card {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s, transform 0.3s;
+}
+
+.student-card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+.student-card h3 {
+    color: #578cdc;
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+.student-card p {
+    color: #333333;
+    margin: 8px 0;
+    font-size: 14px;
+}
+
+.student-card .student-email {
+    color: #666;
+    font-style: italic;
+}
+
+.student-card .student-formation {
+    color: #578cdc;
+    font-weight: 600;
+}
+
+button {
+    display: block;
+    width: 200px;
+    margin: 30px auto;
+    padding: 12px;
+    font-size: 16px;
+    background-color: #578cdc;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Montserrat', Arial, sans-serif;
+    font-weight: 600;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #436bb8;
+}
+
+button:active {
+    transform: translateY(1px);
+}
+
+.no-students {
+    text-align: center;
+    color: #666;
+    font-size: 16px;
+    padding: 40px;
+}
+
+.loading {
+    text-align: center;
+    color: #578cdc;
+    font-size: 18px;
+    padding: 40px;
+}
