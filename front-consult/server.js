@@ -1,8 +1,18 @@
 const express = require("express");
 const WebSocket = require("ws");
+const { Kafka } = require("kafkajs");
 
 const app = express();
 app.use(express.static("public"));
+
+// Kafka setup
+const kafka = new Kafka({
+  clientId: "front-consult",
+  brokers: ["localhost:9092"]
+});
+
+const producer = kafka.producer();
+const consumer = kafka.consumer({ groupId: "front-consult-group" });
 
 // Redirect root to navigationPage.html
 app.get('/', (req, res) => {
@@ -86,3 +96,31 @@ wss.on("connection", ws => {
     clients = clients.filter(c => c !== ws);
   });
 });
+
+// Kafka consumer - listen for responses
+async function initKafka() {
+  await producer.connect();
+  console.log("Kafka producer connected");
+  
+  await consumer.connect();
+  console.log("Kafka consumer connected");
+  
+  await consumer.subscribe({ topic: "student-responses", fromBeginning: false });
+  console.log("Subscribed to topic: student-responses");
+  
+  await consumer.run({
+    eachMessage: async ({ topic, partition, message }) => {
+      const data = message.value.toString();
+      console.log("Received from Kafka:", data);
+      
+      // Broadcast to all connected WebSocket clients
+      clients.forEach(client => {
+        if (client.readyState === WebSocket.OPEN) {
+          client.send(data);
+        }
+      });
+    }
+  });
+}
+
+initKafka().catch(console.error);
