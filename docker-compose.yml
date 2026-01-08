@@ -39,6 +39,8 @@ services:
 #================================
   pg-insa:
     container_name: pg-insa
+    build:
+      context: ./pg-insa
     image: pg-insa:latest
     command: postgres -c 'max_connections=200'
     networks:
@@ -65,7 +67,6 @@ services:
     container_name: integration-services
     build:
       context: ./integration_services/DockerHub
-      dockerfile: Dockerfile
     image: integration_services:latest
     networks:
       - insa-bridge
@@ -85,19 +86,41 @@ services:
 #================================
 #Lancer le service ws template
 #================================
-# TODO : Modifier pour supprimer la dépendance à pg-insa 
-# -> la BDD et l'API doivent être séparées
-  # ws-template:
-  #   depends_on:
-  #     - pg-insa
-  #   container_name: ws-template
-  #   image: ws_services_template:latest
-  #   networks:
-  #     - insa-bridge
-  #   hostname: ws-template
-  #   restart: always
-  #   ports:
-  #     - "8800:8800"
+  ws-template:
+    container_name: ws-template
+    build:
+      context: ./ws_services_template/DockerHub
+    image: ws_services_template:latest
+    networks:
+      - insa-bridge
+    depends_on:
+      - kafka
+      - pg-insa
+    hostname: ws-template
+    restart: always
+    ports:
+      - "8800:8800"
+    environment:
+      # Surcharge des propriétés pour Docker
+      SPRING_DATASOURCE_URL: jdbc:postgresql://pg-insa:5432/insa
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: admin
+
+#================================
+# Lancer le front consult
+#================================
+  front-consult:
+    container_name: front-consult
+    image: front-consult:latest
+    build: ./front-consult
+    ports:
+      - "8080:8080"
+    environment:
+      - NODE_ENV=production
+    restart: always
+    networks:
+      - insa-bridge
+
 
 #renommer le réseau par defaut des services
 networks:
