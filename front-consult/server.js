@@ -4,6 +4,11 @@ const WebSocket = require("ws");
 const app = express();
 app.use(express.static("public"));
 
+// Redirect root to navigationPage.html
+app.get('/', (req, res) => {
+  res.redirect('/html/navigationPage.html');
+});
+
 const server = app.listen(8080, () =>
   console.log("Front Consult sur http://localhost:8080")
 );
