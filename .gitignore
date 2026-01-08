@@ -1,1 +1,8 @@
 /ws_services_template/target/
+/integration_services/target/
+/pgdata
+
+# Node.js
+/front-consult/node_modules/
+*.log
+npm-debug.log*
