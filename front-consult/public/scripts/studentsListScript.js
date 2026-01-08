@@ -1,5 +1,6 @@
-// Create WebSocket connection
-const ws = new WebSocket("ws://localhost:8080");
+// Create WebSocket connection (use current host for flexibility)
+const wsHost = window.location.hostname || 'localhost';
+const ws = new WebSocket(`ws://${wsHost}:8080`);
 
 // On page load, setup WebSocket listeners
 document.addEventListener('DOMContentLoaded', () => {

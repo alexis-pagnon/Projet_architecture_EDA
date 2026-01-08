@@ -1,5 +1,6 @@
-// Create WebSocket connection
-const ws = new WebSocket("ws://localhost:8080");
+// Create WebSocket connection (use current host for flexibility)
+const wsHost = window.location.hostname || 'localhost';
+const ws = new WebSocket(`ws://${wsHost}:8080`);
 
 ws.onopen = () => {
     console.log('WebSocket connection established');

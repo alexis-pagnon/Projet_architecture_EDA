@@ -8,7 +8,7 @@ app.use(express.static("public"));
 // Kafka setup
 const kafka = new Kafka({
   clientId: "front-consult",
-  brokers: ["localhost:9092"]
+  brokers: [process.env.KAFKA_BROKER || "kafka:19092"]
 });
 
 const producer = kafka.producer();
@@ -40,7 +40,8 @@ wss.on("connection", ws => {
       
       // Call REST API based on action
       if (data.action === 'addStudent') {
-        const response = await fetch('http://localhost:8800/service/student/add', {
+        const apiUrl = process.env.API_URL || 'http://ws-template:8800';
+        const response = await fetch(`${apiUrl}/service/student/add`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -63,7 +64,8 @@ wss.on("connection", ws => {
         
       } 
       else if (data.action === 'getStudents') {
-        const response = await fetch('http://localhost:8800/service/students', {
+        const apiUrl = process.env.API_URL || 'http://ws-template:8800';
+        const response = await fetch(`${apiUrl}/service/students`, {
           method: 'GET',
           headers: {
             'x-api-key': 'CAFEBABE'

@@ -47,7 +47,7 @@ services:
     hostname: pg-insa
     restart: always
     ports:
-      - "5432:5432"
+      - "5433:5432"
     environment:
       - TZ=CET
       - POSTGRES_PASSWORD=admin
@@ -116,11 +116,16 @@ services:
     build: ./front-consult
     ports:
       - "8080:8080"
-    environment:
-      - NODE_ENV=production
-    restart: always
     networks:
       - insa-bridge
+    depends_on:
+      - kafka
+      - ws-template
+    environment:
+      - NODE_ENV=production
+      - KAFKA_BROKER=kafka:19092
+      - API_URL=http://ws-template:8800
+    restart: always
 
 
 #renommer le réseau par defaut des services

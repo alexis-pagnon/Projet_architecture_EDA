@@ -17,4 +17,3 @@ ALTER TABLE public.clients ADD CONSTRAINT clients_pk PRIMARY KEY (cle);
 
 INSERT INTO public.clients (cle, datedeb, datefin) VALUES('CAFEBABE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP + interval '30' day);
 
-INSERT INTO public.students (id,nom, prenom, mail, formation) VALUES('12345678','JOHN', 'DOE', 'doe-j@uphf.fr', 'FISA4A');
