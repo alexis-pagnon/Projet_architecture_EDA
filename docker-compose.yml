@@ -33,6 +33,13 @@ services:
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
     volumes:
       - ./kafka/data:/var/lib/kafka/data
+    # Vérification de la santé de Kafka -> nécessaire pour que les autres services attendent que Kafka soit prêt
+    healthcheck:
+      test: /opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --list || exit 1
+      interval: 5s
+      timeout: 10s
+      retries: 10
+      start_period: 10s
       
 #================================
 #Lancer postgresQl
@@ -70,8 +77,10 @@ services:
     networks:
       - insa-bridge
     depends_on:
-      - kafka
-      - pg-insa
+      kafka:
+        condition: service_healthy
+      pg-insa:
+        condition: service_started
     hostname: integration-services
     restart: always
     environment:
@@ -119,11 +128,16 @@ services:
     networks:
       - insa-bridge
     depends_on:
-      - kafka
-      - ws-template
+      kafka:
+        condition: service_healthy
+      ws-template:
+        condition: service_started
+      integration-services:
+        condition: service_started
     environment:
       - NODE_ENV=production
       - KAFKA_BROKER=kafka:19092
+      - KAFKA_RESPONSE_TOPIC=students-response
       - API_URL=http://ws-template:8800
     restart: always
 

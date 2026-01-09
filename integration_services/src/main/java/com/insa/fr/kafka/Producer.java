@@ -20,7 +20,4 @@ public class Producer {
         kafkaTemplate.send(responseTopic, key, message);
     }
 
-    public void sendToTopic(String topic, String key, Object message) {
-        kafkaTemplate.send(topic, key, message);
-    }
 }

@@ -64,25 +64,16 @@ wss.on("connection", ws => {
         
       } 
       else if (data.action === 'getStudents') {
-        const apiUrl = process.env.API_URL || 'http://ws-template:8800';
-        const response = await fetch(`${apiUrl}/service/students`, {
-          method: 'GET',
-          headers: {
-            'x-api-key': 'CAFEBABE'
-          }
+        // Send request via Kafka to integration-services
+        console.log("Sending getStudents request via Kafka");
+        await producer.send({
+          topic: 'students-request',
+          messages: [
+            { key: 'getStudents', value: JSON.stringify({ action: 'getStudents' }) }
+          ]
         });
-        
-        const students = await response.json();
-        
-        // Transform to match frontend format
-        const transformedStudents = students.map(student => ({
-          firstName: student.prenom,
-          lastName: student.nom,
-          email: student.mail,
-          formation: student.formation
-        }));
-        
-        ws.send(JSON.stringify(transformedStudents));
+        // Response will come via Kafka consumer and be broadcast to WebSocket clients
+        console.log("getStudents request sent, waiting for Kafka response...");
       }
     } catch (error) {
       console.error("Error handling message:", error);
@@ -100,29 +91,65 @@ wss.on("connection", ws => {
 });
 
 // Kafka consumer - listen for responses
-async function initKafka() {
-  await producer.connect();
-  console.log("Kafka producer connected");
+async function initKafka(retryCount = 0, maxRetries = 10) {
+  const retryDelay = 5000; // 5 seconds between retries
   
-  await consumer.connect();
-  console.log("Kafka consumer connected");
-  
-  await consumer.subscribe({ topic: "student-responses", fromBeginning: false });
-  console.log("Subscribed to topic: student-responses");
-  
-  await consumer.run({
-    eachMessage: async ({ topic, partition, message }) => {
-      const data = message.value.toString();
-      console.log("Received from Kafka:", data);
-      
-      // Broadcast to all connected WebSocket clients
-      clients.forEach(client => {
-        if (client.readyState === WebSocket.OPEN) {
-          client.send(data);
+  try {
+    await producer.connect();
+    console.log("Kafka producer connected");
+    
+    await consumer.connect();
+    console.log("Kafka consumer connected");
+    
+    const responseTopic = process.env.KAFKA_RESPONSE_TOPIC || "students-response";
+    await consumer.subscribe({ topic: responseTopic, fromBeginning: false });
+    console.log("Subscribed to topic:", responseTopic);
+    
+    await consumer.run({
+      eachMessage: async ({ topic, partition, message }) => {
+        const rawData = message.value.toString();
+        const messageKey = message.key ? message.key.toString() : '';
+        console.log("Received from Kafka (key:", messageKey, "):", rawData);
+        
+        try {
+          let parsedData = JSON.parse(rawData);
+          
+          // If it's a getStudents response (array of students), transform it
+          if (Array.isArray(parsedData)) {
+            parsedData = parsedData.map(student => ({
+              firstName: student.prenom,
+              lastName: student.nom,
+              email: student.mail,
+              formation: student.formation
+            }));
+          }
+          
+          // Broadcast to all connected WebSocket clients
+          clients.forEach(client => {
+            if (client.readyState === WebSocket.OPEN) {
+              client.send(JSON.stringify(parsedData));
+            }
+          });
+        } catch (e) {
+          console.error("Error parsing Kafka message:", e);
         }
-      });
+      }
+    });
+    
+    console.log("Kafka initialization completed successfully!");
+    
+  } catch (error) {
+    console.error(`Kafka init error (attempt ${retryCount + 1}/${maxRetries}):`, error.message);
+    
+    if (retryCount < maxRetries - 1) {
+      console.log(`Retrying in ${retryDelay / 1000} seconds...`);
+      await new Promise(resolve => setTimeout(resolve, retryDelay));
+      return initKafka(retryCount + 1, maxRetries);
+    } else {
+      console.error("Max retries reached. Kafka initialization failed.");
+      throw error;
     }
-  });
+  }
 }
 
 initKafka().catch(console.error);
