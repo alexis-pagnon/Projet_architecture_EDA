@@ -1,1 +1,1 @@
-xdg-open http://localhost:8800/swagger-ui.html
+xdg-open http://localhost:8080/
