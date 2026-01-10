@@ -59,8 +59,8 @@ function createStudentCard(student, container) {
     studentCard.innerHTML = `
         <h2>${student.firstName} ${student.lastName}</h2>
         <p class="student-email">Email: ${student.email}</p>
-        <p class="student-year">Year: ${student.year}</p>
-        <p class="student-formation">Formation: ${student.formation}</p>
+        <p class="student-year">Year: ${String(student.formation).substring(0, 2)}</p>
+        <p class="student-formation">Formation: ${String(student.formation).substring(3)}</p>
     `;
     container.appendChild(studentCard);
 }
