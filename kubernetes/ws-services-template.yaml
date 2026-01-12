@@ -30,7 +30,7 @@ spec:
     spec:
       containers:
         - name: ws-template
-          image: alexispgn/ws_services_template:latest
+          image: alexispgn/ws_services_template:1.0
           ports:
             - containerPort: 8800
           env:

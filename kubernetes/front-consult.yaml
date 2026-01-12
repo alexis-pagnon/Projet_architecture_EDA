@@ -32,7 +32,7 @@ spec:
     spec:
       containers:
         - name: front-consult
-          image: alexispgn/front_consult:latest
+          image: alexispgn/front_consult:1.0
           ports:
             - containerPort: 8080
           env:

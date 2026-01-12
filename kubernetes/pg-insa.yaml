@@ -31,7 +31,7 @@ spec:
     spec:
       containers:
         - name: pg-insa
-          image: alexispgnn/pg_insa:latest
+          image: alexispgn/pg_insa:1.0
           ports:
             - containerPort: 5432
           env:
