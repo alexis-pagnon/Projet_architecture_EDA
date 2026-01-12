@@ -11,7 +11,7 @@ spec:
     app: pg-insa
   ports:
     - port: 5432
-
+---
 # StatefulSet to deploy with a mount
 apiVersion: apps/v1
 kind: StatefulSet
@@ -44,3 +44,11 @@ spec:
           volumeMounts:
             - name: pgdata
               mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+    - metadata:
+        name: pgdata
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi

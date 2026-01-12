@@ -13,8 +13,7 @@ spec:
   ports:
     - port: 8080
       targetPort: 8080
-
-
+---
 # Deployment for front-consult
 apiVersion: apps/v1
 kind: Deployment
@@ -38,10 +37,10 @@ spec:
             - containerPort: 8080
           env:
             - name: KAFKA_BROKER
-              value: kafka:9092
+              value: "kafka:9092"
             - name: KAFKA_RESPONSE_TOPIC
-              value: students-response
+              value: "students-response"
             - name: NODE_ENV
-              value: production
+              value: "production"
             - name: API_URL
-              value: http://ws-template:8800
+              value: "http://ws-template:8800"

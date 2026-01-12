@@ -20,10 +20,10 @@ spec:
           image: alexispgn/integration_services:latest
           env:
             - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
-              value: kafka:9092
+              value: "kafka:9092"
             - name: SPRING_DATASOURCE_URL
-              value: jdbc:postgresql://pg-insa:5432/insa
+              value: "jdbc:postgresql://pg-insa:5432/insa"
             - name: SPRING_DATASOURCE_USERNAME
-              value: postgres
+              value: "postgres"
             - name: SPRING_DATASOURCE_PASSWORD
-              value: admin
+              value: "admin"
