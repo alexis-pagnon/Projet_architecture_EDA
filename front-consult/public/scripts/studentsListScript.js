@@ -1,6 +1,7 @@
 // Create WebSocket connection (use current host for flexibility)
-const wsHost = window.location.hostname || 'localhost';
-const ws = new WebSocket(`ws://${wsHost}:8080`);
+// Use window.location.host to include the port (important for Kubernetes NodePort)
+const wsHost = window.location.host || 'localhost:8080';
+const ws = new WebSocket(`ws://${wsHost}`);
 
 // On page load, setup WebSocket listeners
 document.addEventListener('DOMContentLoaded', () => {
