@@ -1,0 +1,47 @@
+# Kubernetes configuration for front-consult
+
+# Service to expose front-consult
+apiVersion: v1
+kind: Service
+metadata:
+  name: front-consult
+  namespace: architecture-eda
+spec:
+  type: NodePort
+  selector:
+    app: front-consult
+  ports:
+    - port: 8080
+      targetPort: 8080
+
+
+# Deployment for front-consult
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: front-consult
+  namespace: architecture-eda
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: front-consult
+  template:
+    metadata:
+      labels:
+        app: front-consult
+    spec:
+      containers:
+        - name: front-consult
+          image: alexispgn/front_consult:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: KAFKA_BROKER
+              value: kafka:9092
+            - name: KAFKA_RESPONSE_TOPIC
+              value: students-response
+            - name: NODE_ENV
+              value: production
+            - name: API_URL
+              value: http://ws-template:8800

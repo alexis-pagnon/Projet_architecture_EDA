@@ -1,0 +1,40 @@
+# Kubernetes configuration for ws-template
+
+# Service to expose ws-template
+apiVersion: v1
+kind: Service
+metadata:
+  name: ws-template
+  namespace: architecture-eda
+spec:
+  selector:
+    app: ws-template
+  ports:
+    - port: 8800
+
+# Deployment for ws-template
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ws-template
+  namespace: architecture-eda
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ws-template
+  template:
+    metadata:
+      labels:
+        app: ws-template
+    spec:
+      containers:
+        - name: ws-template
+          image: alexispgn/ws_services_template:latest
+          ports:
+            - containerPort: 8800
+          env:
+            - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
+              value: kafka:9092
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://pg-insa:5432/insa

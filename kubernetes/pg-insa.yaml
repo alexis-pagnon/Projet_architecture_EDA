@@ -1,0 +1,46 @@
+# Kubernetes configuration for PostgreSQL
+
+# Service to expose pg-insa : 
+apiVersion: v1
+kind: Service
+metadata:
+  name: pg-insa
+  namespace: architecture-eda
+spec:
+  selector:
+    app: pg-insa
+  ports:
+    - port: 5432
+
+# StatefulSet to deploy with a mount
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: pg-insa
+  namespace: architecture-eda
+spec:
+  serviceName: pg-insa
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pg-insa
+  template:
+    metadata:
+      labels:
+        app: pg-insa
+    spec:
+      containers:
+        - name: pg-insa
+          image: alexispgnn/pg_insa:latest
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              value: "insa"
+            - name: POSTGRES_USER
+              value: "postgres"
+            - name: POSTGRES_PASSWORD
+              value: "admin"
+          volumeMounts:
+            - name: pgdata
+              mountPath: /var/lib/postgresql/data
