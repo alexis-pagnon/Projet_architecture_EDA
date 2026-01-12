@@ -72,7 +72,8 @@ services:
   integration-services:
     container_name: integration-services
     build:
-      context: ./integration_services/DockerHub
+      context: ./integration_services
+      dockerfile: DockerHub/Dockerfile
     image: integration_services:latest
     networks:
       - insa-bridge
@@ -97,7 +98,8 @@ services:
   ws-template:
     container_name: ws-template
     build:
-      context: ./ws_services_template/DockerHub
+      context: ./ws_services_template
+      dockerfile: DockerHub/Dockerfile
     image: ws_services_template:latest
     networks:
       - insa-bridge

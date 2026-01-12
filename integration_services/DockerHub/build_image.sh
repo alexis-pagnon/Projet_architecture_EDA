@@ -1,1 +1,1 @@
-docker build -t integration_services:latest .
+docker build -f DockerHub/Dockerfile -t integration_services:latest .
